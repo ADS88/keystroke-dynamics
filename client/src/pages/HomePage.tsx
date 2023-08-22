@@ -6,7 +6,10 @@ import { getSentence, submitResults } from "../api"
 function HomePage() {
   const [sentence, setSentence] = useState({ id: -1, text: "" })
   const [username, setUsername] = useState("")
+
   const [similarTypistNames, setSimilarTypistNames] = useState<string[]>([])
+  const [hasReceivedSimilarTypistNames, setHasReceivedSimilarTypistNames] = useState(false)
+
   const [keyEvents, setKeyEvents] = useState<KeyEvent[]>([])
 
   const sentenceInputReference = useRef<HTMLTextAreaElement>(null)
@@ -25,6 +28,7 @@ function HomePage() {
     getSentence().then(sentence => {
       setSentence(sentence)
       setSimilarTypistNames([])
+      setHasReceivedSimilarTypistNames(false)
       setTimeout(() => sentenceInputReference.current?.focus(), 100)
     })
   }
@@ -36,6 +40,7 @@ function HomePage() {
   const handleDoneClicked = async () => {
     const similarTypists = await submitResults(username, sentence.id, keyEvents)
     setSimilarTypistNames(similarTypists)
+    setHasReceivedSimilarTypistNames(true)
   }
 
   const handleKeyChange = ({ key, type, timeStamp }: React.KeyboardEvent<HTMLElement>) => {
@@ -43,17 +48,14 @@ function HomePage() {
     setKeyEvents(previousEvents => [...previousEvents, newEvent])
   }
 
-  const hasSubmitted = similarTypistNames.length > 0
-
   return (
     <main className="container" style={{ marginTop: 60 }}>
-      <h1>{sentence.text}</h1>
-      {!hasSubmitted && (
+      {!hasReceivedSimilarTypistNames && (
         <>
+          <h1>{sentence.text}</h1>
           <form>
             <label htmlFor="name">Name</label>
             <input
-              disabled={hasSubmitted}
               type="text"
               name="name"
               id="name"
@@ -64,7 +66,6 @@ function HomePage() {
             <label htmlFor="sentence-input">Sentence</label>
             <textarea
               ref={sentenceInputReference}
-              disabled={hasSubmitted}
               id="sentence-input"
               name="sentence-input"
               onKeyDown={handleKeyChange}
@@ -74,7 +75,7 @@ function HomePage() {
           <button onClick={handleDoneClicked}>Done</button>
         </>
       )}
-      {hasSubmitted && (
+      {hasReceivedSimilarTypistNames && (
         <>
           <SimilarTypists names={similarTypistNames} />
           <button onClick={nextSentence}>Go again!</button>
