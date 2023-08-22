@@ -1,23 +1,32 @@
+import random
+
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import random
+
+from similarity_finder import  find_three_most_similar_to_current_user, profile_user
+from UserProfileRepository import UserProfileRepository
+from sentences import sentences
 
 app = Flask(__name__)
 CORS(app)
 
-sentences = [
-  (0, 'Who washes the windows by Harold the fox'), 
-  (1, 'The quick brown fox washes the dishes and stares out Wendy’s window.'), 
-  (2, 'Humpdy Dumpty washes windows and jumps over the wall.'), 
-  (3, 'Windows by the sea shore require regular washes to see out.')
-]
+user_profile_repository = UserProfileRepository()
+
 
 @app.route("/sentence", methods=['GET', 'POST'])
 def home():
-  if request.method == 'GET':
-    id, sentence = random.choice(sentences)
-    return jsonify(id=id, text=sentence)
-  return jsonify(['Andrewe', 'Frankie', 'Arya'])
+    if request.method == 'GET':
+        sentence_id, text = random.choice(list(sentences.items()))
+        return jsonify(id=sentence_id, text=text)
+    elif request.method == 'POST':
+        current_user_profile = profile_user(request.json)
+        people_who_type_most_similar_to_current_user = find_three_most_similar_to_current_user(
+            current_user_profile,
+            user_profile_repository.all_profiles()
+        )
+        user_profile_repository.add_test(current_user_profile)
+        return people_who_type_most_similar_to_current_user
+
 
 if __name__ == "__main__":
     app.run(debug=True)
