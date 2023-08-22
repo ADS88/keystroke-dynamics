@@ -3,7 +3,7 @@ interface SimilarTypistsProps {
 }
 
 function SimilarTypists({ names }: SimilarTypistsProps) {
-  const similarTypistNames = names.map(name => <li>{name}</li>)
+  const similarTypistNames = names.map(name => <li key={name}>{name}</li>)
   return (
     <>
       <h2>Your typing is most similar to</h2>
