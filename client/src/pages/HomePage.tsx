@@ -1,65 +1,86 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState, useRef } from "react"
 import SimilarTypists from "../components/SimilarTypists"
-import { Submission } from "../interfaces"
-import axiosInstance from "../axios-config"
-
-const getSentence: () => Promise<{ text: string; id: number }> = async () => {
-  const response = await axiosInstance.get("sentence")
-  return response.data
-}
-
-const submitResults: () => Promise<string[]> = async () => {
-  const submission: Submission = {
-    results: [],
-    username: "Test user",
-    sentenceId: 1,
-  }
-  const response = await axiosInstance.post("/sentence", submission)
-  return response.data
-}
+import { KeyEvent } from "../interfaces"
+import { getSentence, submitResults } from "../api"
 
 function HomePage() {
-  const [sentence, setSentence] = useState("")
-  const [sentenceId, setSentenceId] = useState(-1)
-
-  const [name, setName] = useState("")
+  const [sentence, setSentence] = useState({ id: -1, text: "" })
+  const [username, setUsername] = useState("")
   const [similarTypistNames, setSimilarTypistNames] = useState<string[]>([])
+  const [keyEvents, setKeyEvents] = useState<KeyEvent[]>([])
 
-  const handleNameChange = (event: any) => {
-    setName(event.target.value)
-  }
+  const sentenceInputReference = useRef<HTMLTextAreaElement>(null)
+  const nameInputReference = useRef<HTMLInputElement>(null)
 
-  const doneClicked = async () => {
-    const response = await submitResults()
-    setSimilarTypistNames(response)
-  }
+  useEffect(() => initialSentence(), [])
 
-  const newSentence = () => {
+  const initialSentence = () => {
     getSentence().then(sentence => {
-      setSentence(sentence.text)
-      setSentenceId(sentence.id)
+      setSentence(sentence)
+      nameInputReference.current?.focus()
     })
   }
 
-  useEffect(() => newSentence(), [])
+  const nextSentence = () => {
+    getSentence().then(sentence => {
+      setSentence(sentence)
+      setSimilarTypistNames([])
+      setTimeout(() => sentenceInputReference.current?.focus(), 100)
+    })
+  }
+
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setUsername(event.target.value)
+  }
+
+  const handleDoneClicked = async () => {
+    const similarTypists = await submitResults(username, sentence.id, keyEvents)
+    setSimilarTypistNames(similarTypists)
+  }
+
+  const handleKeyChange = ({ key, type, timeStamp }: React.KeyboardEvent<HTMLElement>) => {
+    const newEvent: KeyEvent = { key, type, timestampMillis: timeStamp }
+    setKeyEvents(previousEvents => [...previousEvents, newEvent])
+  }
 
   const hasSubmitted = similarTypistNames.length > 0
 
   return (
-    <>
-      <main id="app" className="container">
-        <h1>{sentence}</h1>
-        <form>
-          <label htmlFor="name">Name</label>
-          <input type="text" id="name" name="fname" value={name} onChange={handleNameChange} />
-          <label htmlFor="sentence-input">Sentence</label>
-          <textarea id="sentence-input" name="sentence-input"></textarea>
-        </form>
-        {!hasSubmitted && <button onClick={doneClicked}>Done</button>}
-        {hasSubmitted && <SimilarTypists names={similarTypistNames} />}
-        {hasSubmitted && <button onClick={newSentence}>Try again</button>}
-      </main>
-    </>
+    <main className="container" style={{ marginTop: 60 }}>
+      <h1>{sentence.text}</h1>
+      {!hasSubmitted && (
+        <>
+          <form>
+            <label htmlFor="name">Name</label>
+            <input
+              disabled={hasSubmitted}
+              type="text"
+              name="name"
+              id="name"
+              value={username}
+              onChange={handleNameChange}
+              ref={nameInputReference}
+            />
+            <label htmlFor="sentence-input">Sentence</label>
+            <textarea
+              ref={sentenceInputReference}
+              disabled={hasSubmitted}
+              id="sentence-input"
+              name="sentence-input"
+              onKeyDown={handleKeyChange}
+              onKeyUp={handleKeyChange}
+            ></textarea>
+          </form>
+          <button onClick={handleDoneClicked}>Done</button>
+        </>
+      )}
+      {hasSubmitted && (
+        <>
+          <SimilarTypists names={similarTypistNames} />
+          <button onClick={nextSentence}>Go again!</button>
+        </>
+      )}
+    </main>
   )
 }
 
