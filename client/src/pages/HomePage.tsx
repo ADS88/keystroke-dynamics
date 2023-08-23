@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState } from "react"
 import SimilarTypists from "../components/SimilarTypists"
 import { KeyEvent } from "../interfaces"
 import { getSentence, submitResults } from "../api"
@@ -12,24 +12,14 @@ function HomePage() {
 
   const [keyEvents, setKeyEvents] = useState<KeyEvent[]>([])
 
-  const sentenceInputReference = useRef<HTMLTextAreaElement>(null)
-  const nameInputReference = useRef<HTMLInputElement>(null)
+  useEffect(() => newSentence(), [])
 
-  useEffect(() => initialSentence(), [])
-
-  const initialSentence = () => {
-    getSentence().then(sentence => {
-      setSentence(sentence)
-      nameInputReference.current?.focus()
-    })
-  }
-
-  const nextSentence = () => {
+  const newSentence = () => {
     getSentence().then(sentence => {
       setSentence(sentence)
       setSimilarTypistNames([])
       setHasReceivedSimilarTypistNames(false)
-      setTimeout(() => sentenceInputReference.current?.focus(), 100)
+      setKeyEvents([])
     })
   }
 
@@ -43,7 +33,7 @@ function HomePage() {
     setHasReceivedSimilarTypistNames(true)
   }
 
-  const handleKeyChange = ({ key, type, timeStamp }: React.KeyboardEvent<HTMLElement>) => {
+  const handleSentenceKeyChange = ({ key, type, timeStamp }: React.KeyboardEvent<HTMLElement>) => {
     const newEvent: KeyEvent = { key, type, timestampMillis: timeStamp }
     setKeyEvents(previousEvents => [...previousEvents, newEvent])
   }
@@ -55,21 +45,13 @@ function HomePage() {
           <h1>{sentence.text}</h1>
           <form>
             <label htmlFor="name">Name</label>
-            <input
-              type="text"
-              name="name"
-              id="name"
-              value={username}
-              onChange={handleNameChange}
-              ref={nameInputReference}
-            />
-            <label htmlFor="sentence-input">Sentence</label>
+            <input type="text" name="name" id="name" value={username} onChange={handleNameChange} />
+            <label htmlFor="sentence">Sentence</label>
             <textarea
-              ref={sentenceInputReference}
-              id="sentence-input"
-              name="sentence-input"
-              onKeyDown={handleKeyChange}
-              onKeyUp={handleKeyChange}
+              id="sentence"
+              name="sentence"
+              onKeyDown={handleSentenceKeyChange}
+              onKeyUp={handleSentenceKeyChange}
             ></textarea>
           </form>
           <button onClick={handleDoneClicked}>Done</button>
@@ -78,7 +60,7 @@ function HomePage() {
       {hasReceivedSimilarTypistNames && (
         <>
           <SimilarTypists names={similarTypistNames} />
-          <button onClick={nextSentence}>Go again!</button>
+          <button onClick={newSentence}>Go again!</button>
         </>
       )}
     </main>
