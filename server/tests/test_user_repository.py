@@ -1,5 +1,5 @@
-from UserProfileRepository import UserProfileRepository
-from UserProfile import UserProfile
+from src.UserProfileRepository import UserProfileRepository
+from src.UserProfile import UserProfile
 
 
 def test_updates_existing_results_using_median():

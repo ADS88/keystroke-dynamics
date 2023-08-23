@@ -1,6 +1,6 @@
-from input_models import KeyEvent
+from src.input_models import KeyEvent
 from pytest import raises
-from typing_characteristics_calculations import calculate_milliseconds_per_character
+from src.typing_characteristics_calculations import calculate_milliseconds_per_character
 
 
 def test_milliseconds_per_character_calculates_correctly():

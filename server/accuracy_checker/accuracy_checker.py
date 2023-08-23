@@ -1,7 +1,8 @@
+"""Script that checks how accurate the typing similarities provided by the app are"""
 from test_data import test_data
 from training_data import training_data
-from UserProfileRepository import UserProfileRepository
-from similarity_finder import profile_user, find_three_users_most_similar_to_current
+from src.UserProfileRepository import UserProfileRepository
+from src.similarity_finder import profile_user, find_three_users_most_similar_to_current
 
 user_profile_repository = UserProfileRepository()
 for submission in training_data:

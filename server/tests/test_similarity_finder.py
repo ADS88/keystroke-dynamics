@@ -1,5 +1,5 @@
-from UserProfile import UserProfile
-from similarity_finder import find_three_users_most_similar_to_current
+from src.UserProfile import UserProfile
+from src.similarity_finder import find_three_users_most_similar_to_current
 
 
 def test_most_similar_users_returns_empty_list_if_no_users_stored():
