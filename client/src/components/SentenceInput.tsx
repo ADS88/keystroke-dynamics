@@ -23,12 +23,12 @@ function SentenceInput({
     setTypedSentence(event.target.value)
   }
 
-  const submitDisabled = username.length === 0 || typedSentence.length === 0
+  const submitDisabled = !username.trim() || !typedSentence.trim()
 
   return (
     <>
       <h1>{sentence}</h1>
-      <label htmlFor="sentence">Sentence</label>
+      <label htmlFor="sentence">Type the text passage into the box below</label>
       <textarea
         id="sentence"
         name="sentence"
@@ -39,7 +39,7 @@ function SentenceInput({
         onChange={handleTypedSentenceChange}
       ></textarea>
       <form>
-        <label htmlFor="name">Name</label>
+        <label htmlFor="name">Then type your name in this box</label>
         <input type="text" name="name" id="name" value={username} onChange={handleNameChange} />
       </form>
       <button onClick={handleDoneClicked} disabled={submitDisabled}>

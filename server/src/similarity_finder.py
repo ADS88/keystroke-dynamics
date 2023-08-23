@@ -4,10 +4,11 @@ from typing_characteristics_calculations import calculate_milliseconds_per_chara
 
 
 def profile_user(submission: Submission) -> UserProfile:
-    """Creates a profile with calculated characteristics calculated for the user who made the submission"""
+    """Creates a profile with characteristics calculated for the user who made the submission"""
     username = submission["username"]
     results = submission["results"]
-    milliseconds_per_character = calculate_milliseconds_per_character(results)
+    filtered_results = [result for result in results if result["key"] not in ["Tab", "Enter"]]
+    milliseconds_per_character = calculate_milliseconds_per_character(filtered_results)
     median_dwell_time = calculate_median_dwell_time(results)
     return UserProfile(username, milliseconds_per_character, median_dwell_time)
 
