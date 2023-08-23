@@ -8,13 +8,14 @@ def profile_user(test: TestData) -> UserProfile:
     results = test["results"]
     milliseconds_per_character = calculate_milliseconds_per_character(test["results"])
     median_dwell_time = calculate_median_dwell_time(results)
-    return UserProfile(username, milliseconds_per_character, median_dwell_time)
+    median_interval_time = calculate_median_interval_time(results)
+    return UserProfile(username, milliseconds_per_character, median_dwell_time, median_interval_time)
 
 
 def find_three_most_similar_to_current_user(
         current_user: UserProfile,
         all_profiles: list[UserProfile]) -> list[str]:
-    differences = [(current_user.similarity_with(other_profile), other_profile.username) for other_profile in
+    differences = [(current_user.similarity_to(other_profile), other_profile.username) for other_profile in
                    all_profiles]
     differences.sort(key=lambda x: (x[0], x[1]))
     return [difference[1] for difference in differences[0:3]]
@@ -50,3 +51,19 @@ def calculate_median_dwell_time(results: list[KeyEvent]) -> float:
 
     median_dwell_time = statistics.median(dwell_times)
     return median_dwell_time
+
+
+def calculate_median_interval_time(result: list[KeyEvent]) -> float:
+    most_recent_keyup_timestamp = None
+    interval_times = []
+    for key_event in result:
+        key_type = key_event["type"]
+        timestamp = key_event["timestampMillis"]
+        if key_type == "keydown" and most_recent_keyup_timestamp is not None:
+            interval_time = timestamp - most_recent_keyup_timestamp
+            interval_times.append(interval_time)
+            most_recent_keyup_timestamp = None
+        elif key_type == "keyup":
+            most_recent_keyup_timestamp = timestamp
+    median_interval_time = statistics.median(interval_times)
+    return median_interval_time
