@@ -7,9 +7,9 @@ def test_updates_existing_results_using_median():
 
     test_results = [
         UserProfile("test user", 2000, 100),
-        UserProfile("other user", 2000, 100),
-        UserProfile("test user", 2130, 100),
-        UserProfile("test user", 1843, 100)
+        UserProfile("other user", 2000, 200),
+        UserProfile("test user", 2130, 300),
+        UserProfile("test user", 1843, 400)
     ]
 
     for result in test_results:
@@ -17,6 +17,7 @@ def test_updates_existing_results_using_median():
 
     assert len(user_profile_repository.all_profiles()) == 2
     assert user_profile_repository.user_profiles['test user'].median_milliseconds_per_character == 2000
+    assert user_profile_repository.user_profiles['test user'].median_dwell_time == 300
 
 
 def test_adds_new_result_when_no_previous_results_for_user():
