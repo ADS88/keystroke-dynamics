@@ -9,7 +9,7 @@ function HomePage() {
   const [username, setUsername] = useState("")
 
   const [similarTypistNames, setSimilarTypistNames] = useState<string[]>([])
-  const [hasCompletedTest, setHasCompletedTest] = useState(false)
+  const [hasSubmitted, setHasSubmitted] = useState(false)
 
   const [keyEvents, setKeyEvents] = useState<KeyEvent[]>([])
 
@@ -19,7 +19,7 @@ function HomePage() {
     getSentence().then(sentence => {
       setSentence(sentence)
       setSimilarTypistNames([])
-      setHasCompletedTest(false)
+      setHasSubmitted(false)
       setKeyEvents([])
     })
   }
@@ -31,7 +31,7 @@ function HomePage() {
   const handleDoneClicked = async () => {
     const similarTypists = await submitResults(username, sentence.id, keyEvents)
     setSimilarTypistNames(similarTypists)
-    setHasCompletedTest(true)
+    setHasSubmitted(true)
   }
 
   const handleSentenceKeyChange = ({ key, type, timeStamp }: React.KeyboardEvent<HTMLElement>) => {
@@ -41,7 +41,7 @@ function HomePage() {
 
   return (
     <main className="container" style={{ marginTop: 60 }}>
-      {hasCompletedTest ? (
+      {hasSubmitted ? (
         <SimilarTypists names={similarTypistNames} newSentence={newSentence} />
       ) : (
         <SentenceInput

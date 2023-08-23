@@ -2,3 +2,4 @@ Dockerfile
 .git
 .gitignore
 node_modules
+.estlintrc.cjs
