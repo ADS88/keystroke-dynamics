@@ -12,7 +12,7 @@ def find_three_most_similar_to_current_user(
         current_user: UserProfile,
         all_profiles: list[UserProfile]) -> list[str]:
     differences = [
-        (abs(current_user.milliseconds_per_character - other_profile.milliseconds_per_character),
+        (abs(current_user.median_milliseconds_per_character - other_profile.median_milliseconds_per_character),
          other_profile.username
          ) for other_profile in all_profiles]
     differences.sort(key=lambda x: (x[0], x[1]))

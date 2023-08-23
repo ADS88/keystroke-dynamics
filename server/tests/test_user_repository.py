@@ -2,19 +2,21 @@ from UserProfileRepository import UserProfileRepository
 from UserProfile import UserProfile
 
 
-def test_updates_existing_results_using_average():
+def test_updates_existing_results_using_median():
     user_profile_repository = UserProfileRepository()
 
-    test_result = UserProfile("test user", 1000)
-    test_result_two = UserProfile("test user", 2000)
-    test_result_three = UserProfile("different user", 3000)
+    test_results = [
+        UserProfile("test user", 2000),
+        UserProfile("other user", 2000),
+        UserProfile("test user", 2130),
+        UserProfile("test user", 1843)
+    ]
 
-    user_profile_repository.add_test(test_result)
-    user_profile_repository.add_test(test_result_two)
-    user_profile_repository.add_test(test_result_three)
+    for result in test_results:
+        user_profile_repository.add_test(result)
 
     assert len(user_profile_repository.all_profiles()) == 2
-    assert user_profile_repository.user_profiles['test user'].milliseconds_per_character == 1500
+    assert user_profile_repository.user_profiles['test user'].median_milliseconds_per_character == 2000
 
 
 def test_adds_new_result_when_no_previous_results_for_user():
