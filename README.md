@@ -6,7 +6,11 @@ This application is designed to determine what other application users someone t
 
 ### Using Docker (Recommended)
 
-The easiest way to run this application locally is using docker. In the root directory of the project, run the command '**docker-compose up**'. This will start both the frontend, and the backend of the project. Hot reloading is supported, meaning changes made locally will be reflected in the running application.
+The easiest way to run this application locally is using docker.
+
+1: Ensure you have docker installed on your computer
+2: Ensure the docker daemon is running (e.g launch docker desktop on mac)
+3: In the root directory of the project, run the command '**docker-compose up**'. This will start both the frontend, and the backend of the project. Hot reloading is supported, meaning changes made locally will be reflected in the running application.
 
 Once the application is running you can navigate to **http://localhost:5173/** to see the application in action!
 
@@ -20,7 +24,7 @@ Once the application is running you can navigate to **http://localhost:5173/** t
 4. Activate the virtual environment: **source venv/bin/activate**
 5. Update your virtual environments pip: **python -m pip install --upgrade pip**
 6. Install required dependencies: **pip3 install -r requirements.txt**
-7. Start the development server with the command: **python -m flask run**
+7. Start the development server in the server/src directory with the command: **python -m flask run**
 
 #### Client
 
