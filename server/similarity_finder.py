@@ -3,12 +3,12 @@ from input_models import KeyEvent, TestData
 import statistics
 
 
-def profile_user(test: TestData) -> UserProfile:
+def profile_user(test: TestData, weights) -> UserProfile:
     username = test["username"]
     results = test["results"]
-    milliseconds_per_character = calculate_milliseconds_per_character(test["results"])
-    median_dwell_time = calculate_median_dwell_time(results)
-    median_interval_time = calculate_median_interval_time(results)
+    milliseconds_per_character = calculate_milliseconds_per_character(test["results"]) * weights[0]
+    median_dwell_time = calculate_median_dwell_time(results) * weights[1]
+    median_interval_time = calculate_median_interval_time(results) * weights[2]
     return UserProfile(username, milliseconds_per_character, median_dwell_time, median_interval_time)
 
 
