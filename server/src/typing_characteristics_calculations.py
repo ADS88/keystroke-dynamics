@@ -15,7 +15,8 @@ def calculate_milliseconds_per_character(results: list[KeyEvent]) -> float:
 
 
 def calculate_median_dwell_time(results: list[KeyEvent]) -> float:
-    """Dwell time the average time a key is held down for"""
+    """Calculates median dwell time using the time between key down and key up events for each key.
+    Dwell is time the time between a key being pressed down, and released."""
     dwell_times = []
     key_to_keydown_timestamp: dict[str, float] = {}
 
