@@ -24,7 +24,7 @@ def home():
             current_user_profile,
             user_profile_repository.all_profiles()
         )
-        user_profile_repository.add_test(current_user_profile)
+        user_profile_repository.add_submission(current_user_profile)
         return people_who_type_most_similar_to_current_user
 
 

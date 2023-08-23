@@ -1,13 +1,19 @@
 from typing import TypedDict
+from enum import Enum
+
+
+class KeyEventType(str, Enum):
+    KEYUP = "keyup"
+    KEYDOWN = "keydown"
 
 
 class KeyEvent(TypedDict):
     key: str
-    type: str
+    type: KeyEventType
     timestampMillis: float
 
 
-class TestData(TypedDict):
+class Submission(TypedDict):
     username: str
     sentenceId: int
     results: list[KeyEvent]

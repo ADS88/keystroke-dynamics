@@ -1,12 +1,12 @@
 from test_data import test_data
 from training_data import training_data
 from UserProfileRepository import UserProfileRepository
-from similarity_finder import profile_user, find_three_most_similar_to_current_user
+from similarity_finder import profile_user, find_three_users_most_similar_to_current
 
 user_profile_repository = UserProfileRepository()
-for test in training_data:
-    test_result = profile_user(test)
-    user_profile_repository.add_test(test_result)
+for submission in training_data:
+    test_result = profile_user(submission)
+    user_profile_repository.add_submission(test_result)
 
 times_first_result = 0
 times_second_result = 0
@@ -15,7 +15,7 @@ times_not_present = 0
 
 for test in test_data:
     test_result = profile_user(test)
-    most_similar_users = find_three_most_similar_to_current_user(test_result, user_profile_repository.all_profiles())
+    most_similar_users = find_three_users_most_similar_to_current(test_result, user_profile_repository.all_profiles())
     user_under_test = test["username"]
     if user_under_test in most_similar_users:
         if user_under_test == most_similar_users[0]:
