@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react"
 import SimilarTypists from "./SimilarTypists"
 
 it("Test shows the users an informative message if no similar names are found", () => {
-  render(<SimilarTypists names={[]} />)
+  render(<SimilarTypists names={[]} newSentence={() => {}} />)
 
   const heading = screen.getByTestId("similar-names-heading")
   expect(heading).toContainHTML("No similar people could be found")
@@ -13,7 +13,7 @@ it("Test shows the users an informative message if no similar names are found", 
 })
 
 it("Renders the similar typists names", () => {
-  render(<SimilarTypists names={["Andrew", "Frankie", "Fletcher"]} />)
+  render(<SimilarTypists names={["Andrew", "Frankie", "Fletcher"]} newSentence={() => {}} />)
 
   const heading = screen.getByTestId("similar-names-heading")
   expect(heading).toContainHTML("most similar to")

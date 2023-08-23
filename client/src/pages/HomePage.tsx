@@ -2,13 +2,14 @@ import { useEffect, useState } from "react"
 import SimilarTypists from "../components/SimilarTypists"
 import { KeyEvent } from "../interfaces"
 import { getSentence, submitResults } from "../api"
+import SentenceInput from "../components/SentenceInput"
 
 function HomePage() {
   const [sentence, setSentence] = useState({ id: -1, text: "" })
   const [username, setUsername] = useState("")
 
   const [similarTypistNames, setSimilarTypistNames] = useState<string[]>([])
-  const [hasReceivedSimilarTypistNames, setHasReceivedSimilarTypistNames] = useState(false)
+  const [hasCompletedTest, setHasCompletedTest] = useState(false)
 
   const [keyEvents, setKeyEvents] = useState<KeyEvent[]>([])
 
@@ -18,7 +19,7 @@ function HomePage() {
     getSentence().then(sentence => {
       setSentence(sentence)
       setSimilarTypistNames([])
-      setHasReceivedSimilarTypistNames(false)
+      setHasCompletedTest(false)
       setKeyEvents([])
     })
   }
@@ -30,7 +31,7 @@ function HomePage() {
   const handleDoneClicked = async () => {
     const similarTypists = await submitResults(username, sentence.id, keyEvents)
     setSimilarTypistNames(similarTypists)
-    setHasReceivedSimilarTypistNames(true)
+    setHasCompletedTest(true)
   }
 
   const handleSentenceKeyChange = ({ key, type, timeStamp }: React.KeyboardEvent<HTMLElement>) => {
@@ -40,28 +41,16 @@ function HomePage() {
 
   return (
     <main className="container" style={{ marginTop: 60 }}>
-      {!hasReceivedSimilarTypistNames && (
-        <>
-          <h1>{sentence.text}</h1>
-          <form>
-            <label htmlFor="name">Name</label>
-            <input type="text" name="name" id="name" value={username} onChange={handleNameChange} />
-            <label htmlFor="sentence">Sentence</label>
-            <textarea
-              id="sentence"
-              name="sentence"
-              onKeyDown={handleSentenceKeyChange}
-              onKeyUp={handleSentenceKeyChange}
-            ></textarea>
-          </form>
-          <button onClick={handleDoneClicked}>Done</button>
-        </>
-      )}
-      {hasReceivedSimilarTypistNames && (
-        <>
-          <SimilarTypists names={similarTypistNames} />
-          <button onClick={newSentence}>Go again!</button>
-        </>
+      {hasCompletedTest ? (
+        <SimilarTypists names={similarTypistNames} newSentence={newSentence} />
+      ) : (
+        <SentenceInput
+          sentence={sentence.text}
+          username={username}
+          handleDoneClicked={handleDoneClicked}
+          handleSentenceKeyChange={handleSentenceKeyChange}
+          handleNameChange={handleNameChange}
+        />
       )}
     </main>
   )
