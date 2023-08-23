@@ -8,11 +8,10 @@ This application is designed to determine what other application users someone t
 
 The easiest way to run this application locally is using docker.
 
-1: Ensure you have docker installed on your computer
-2: Ensure the docker daemon is running (e.g launch docker desktop on mac)
-3: In the root directory of the project, run the command '**docker-compose up**'. This will start both the frontend, and the backend of the project. Hot reloading is supported, meaning changes made locally will be reflected in the running application.
-
-Once the application is running you can navigate to **http://localhost:5173/** to see the application in action!
+1. Ensure you have docker installed on your computer
+2. Ensure the docker daemon is running (e.g launch docker desktop on mac)
+3. In the root directory of the project, run the command '**docker-compose up**'. This will start both the frontend, and the backend of the project. Hot reloading is supported, meaning changes made locally will be reflected in the running application.
+4. Once the application is running you can navigate to **http://localhost:5173/** to see the application in action!
 
 ### Without Docker (Mac/Linux)
 
